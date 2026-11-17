@@ -1,0 +1,16 @@
+cmake_minimum_required(VERSION 3.21)
+project(MachineDisplayLab LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+find_package(Qt6 REQUIRED COMPONENTS Quick Qml)
+qt_standard_project_setup(REQUIRES 6.5)
+
+qt_add_executable(machine_display main.cpp)
+target_link_libraries(machine_display PRIVATE Qt6::Quick Qt6::Qml)
+qt_add_qml_module(machine_display URI MachineDisplay VERSION 1.0 QML_FILES Main.qml)
+
+enable_testing()
+add_executable(decoder_test decoder_test.cpp)
+add_test(NAME decoder COMMAND decoder_test)
+add_test(NAME qml_load COMMAND machine_display --smoke)
+set_tests_properties(qml_load PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software")
